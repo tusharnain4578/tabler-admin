@@ -57,4 +57,14 @@ class UserService
     {
         return User::where('username', $username)->first($columns);
     }
+
+    public function isDeletable(User $user): bool
+    {
+        return !$user->children()->exists();
+    }
+
+    public function delete(User $user): bool|null
+    {
+        return $user->delete();
+    }
 }

@@ -31,12 +31,7 @@
         var dtTable = null;
 
         const Action = {
-            showUrl: @js(route('admin.users.show', ':id')),
             deleteUrl: @js(route('admin.users.destroy', ':id')),
-            show: function(username) {
-                const url = this.showUrl.replace(':id', username);
-                return `<a href="${url}" class="cursor-pointer mx-1"><i class="ti ti-eye text-success h1"></i></a>`;
-            },
             delete: function(username) {
                 return `<a href="javascript:;" data-delete-id="${username}" class="cursor-pointer mx-1"><i class="ti ti-trash text-danger h1"></i></a>`;
             },
@@ -69,7 +64,7 @@
                         data: 'username',
                         name: 'username',
                         render: function(data, type, row, meta) {
-                            return wrap_anchor(data, Action.showUrl.replace(':id', row.id));
+                            return data;
                         }
                     },
                     {
@@ -111,7 +106,7 @@
                         data: 'id',
                         name: 'id',
                         render: function(data, type, row, meta) {
-                            return Action.show(data) + Action.delete(data);
+                            return Action.delete(data);
                         }
                     },
                 ],

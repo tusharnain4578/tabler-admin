@@ -98,8 +98,13 @@ class User extends Authenticatable
         return $this->roles->sortBy('priority')->first() ?? null;
     }
 
+    public function children()
+    {
+        return $this->hasMany(related: User::class, foreignKey: 'sponsor_id');
+    }
+
     public function sponsor()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(related: User::class);
     }
 }

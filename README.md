@@ -52,7 +52,7 @@ Before you begin, ensure you have the following tools installed:
 
     Run the database seeders to populate roles/permissions and initial data:
 
-    php artisan db:seed
+        php artisan db:seed
 
 9.  **Start the development server:**
 
@@ -65,3 +65,10 @@ Your application should now be running at `http://localhost:8000`.
 ## Additional Commands
 
 -   **Clear application cache:**
+
+## Login Information
+
+After seeding the database, you can use the following credentials to log in:
+
+-   **Username:** `admin`
+-   **Password:** `password`

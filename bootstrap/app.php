@@ -17,7 +17,7 @@ $app->withRouting(
 $app->withMiddleware(function (Middleware $middleware) {
 
     $middleware->append([
-        // \App\Http\Middleware\DisableBrowserCacheStore::class
+        \App\Http\Middleware\DisableBrowserCacheStore::class
     ]);
 
     $middleware->alias([

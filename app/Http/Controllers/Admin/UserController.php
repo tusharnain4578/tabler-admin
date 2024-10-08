@@ -81,6 +81,10 @@ class UserController extends \App\Foundation\Controller
      */
     public function destroy(User $user)
     {
-        //
+        $this->toast = $this->service->isDeletable($user) && $this->service->delete($user) ?
+            ['type' => 'success', 'message' => 'User deleted!'] :
+            ['type' => 'warning', 'message' => 'User can\'t be removed.'];
+
+        return $this->responseService->json(success: true, toast: $this->toast);
     }
 }
