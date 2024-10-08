@@ -66,6 +66,8 @@ Your application should now be running at `http://localhost:8000`.
 
 -   **Clear application cache:**
 
+        php artisan optimize:clear
+
 ## Login Information
 
 After seeding the database, you can use the following credentials to log in:
