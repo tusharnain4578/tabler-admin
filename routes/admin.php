@@ -38,9 +38,9 @@ Route::middleware(['auth:admin', 'permission:' . Permission::ADMIN_PANEL])->grou
 
     Route::resource('roles', RoleController::class);
 
-    Route::resource('admins', AdminController::class);
+    Route::resource('admins', AdminController::class)->except('show');
 
-    Route::resource('users', UserController::class)->except('edit', 'update');
+    Route::resource('users', UserController::class)->except('show', 'edit', 'update');
 
 });
 

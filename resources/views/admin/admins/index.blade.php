@@ -1,7 +1,11 @@
 @extends('admin.layouts.app', [
     'pageTitle' => Breadcrumbs::current()->title,
     'breadcrumbs' => Breadcrumbs::render('admin.admins.index'),
-    'buttons' => [['label' => 'Add new admin', 'icon' => 'ti ti-plus', 'url' => route('admin.admins.create')]],
+    'buttons' => [
+        auth('admin')->user()->can(Permission::ADMIN_CREATE)
+            ? ['label' => 'Add new admin', 'icon' => 'ti ti-plus', 'url' => route('admin.admins.create')]
+            : null,
+    ],
 ])
 
 @include('admin.layouts.components.datatable')
@@ -29,18 +33,23 @@
         var dtTable = null;
 
         const Action = {
-            showUrl: @js(route('admin.admins.show', ':id')),
             editUrl: @js(route('admin.admins.edit', ':id')),
             deleteUrl: @js(route('admin.admins.destroy', ':id')),
-            show: function(username) {
-                const url = this.showUrl.replace(':id', username);
-                return `<a href="${url}" class="cursor-pointer mx-1"><i class="ti ti-eye text-warning h1"></i></a>`;
-            },
+            canEdit: @js(
+                auth('admin')->user()->can(Permission::ADMIN_UPDATE)
+            ),
+            canDelete: @js(
+                auth('admin')->user()->can(Permission::ADMIN_DELETE)
+            ),
             edit: function(username) {
+                if (!Action.canEdit)
+                    return '';
                 const url = this.editUrl.replace(':id', username);
                 return `<a href="${url}" class="cursor-pointer mx-1"><i class="ti ti-edit text-primary h1"></i></a>`;
             },
             delete: function(username) {
+                if (!Action.canDelete)
+                    return '';
                 return `<a href="javascript:;" data-delete-id="${username}" class="cursor-pointer mx-1"><i class="ti ti-trash text-danger h1"></i></a>`;
             },
         };
@@ -69,7 +78,7 @@
                         data: 'name',
                         name: 'name',
                         render: function(data, type, row, meta) {
-                            return wrap_anchor(data, Action.showUrl.replace(':id', row.id));
+                            return data;
                         }
                     },
                     {
@@ -102,7 +111,7 @@
                         data: 'id',
                         name: 'id',
                         render: function(data, type, row, meta) {
-                            return Action.show(data) + Action.edit(data) + Action.delete(data);
+                            return Action.edit(data) + Action.delete(data);
                         }
                     },
                 ],

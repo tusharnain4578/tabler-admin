@@ -10,7 +10,7 @@
                 <div class="card-body">
                     @include('admin.roles.form', [
                         'method' => 'PUT',
-                        'actionUrl' => route('admin.roles.update'),
+                        'actionUrl' => route('admin.roles.update', $role),
                         'role' => $role,
                         'permissions' => $permissions,
                         'rolePermissions' => $rolePermissions,

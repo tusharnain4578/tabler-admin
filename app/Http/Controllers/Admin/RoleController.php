@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\Admin\RoleRequest;
 use Illuminate\Http\JsonResponse;
 use App\Services\ResponseService;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
+use App\Enums\Permission as PermissionEnum;
 use App\Models\Permission;
 use App\Models\Role;
 
-class RoleController extends \App\Foundation\Controller
+class RoleController extends \App\Foundation\Controller implements HasMiddleware
 {
     /**
      * Constructor for RoleController
@@ -21,6 +25,21 @@ class RoleController extends \App\Foundation\Controller
         protected RoleService $service,
         protected ResponseService $responseService
     ) {
+    }
+
+    /**
+     * Permission middleware for resource controller methods
+     * 
+     * @return array
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(PermissionMiddleware::using(PermissionEnum::ROLE_LIST), only: ['index']),
+            new Middleware(PermissionMiddleware::using(PermissionEnum::ROLE_CREATE), only: ['create', 'store']),
+            new Middleware(PermissionMiddleware::using(PermissionEnum::ROLE_UPDATE), only: ['edit', 'update']),
+            new Middleware(PermissionMiddleware::using(PermissionEnum::ROLE_DELETE), only: ['destroy']),
+        ];
     }
 
     /**

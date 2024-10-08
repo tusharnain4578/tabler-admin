@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\Admin\PermissionRequest;
 use App\Services\PermissionService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
 use App\Models\Permission;
+use App\Enums\Permission as PermissionEnum;
 
-class PermissionController extends \App\Foundation\Controller
+class PermissionController extends \App\Foundation\Controller implements HasMiddleware
 {
     /**
      * Constructor for PermissionController
@@ -19,6 +23,19 @@ class PermissionController extends \App\Foundation\Controller
         protected PermissionService $service,
         protected ResponseService $responseService
     ) {
+    }
+
+    /**
+     * Permission middleware for resource controller methods
+     * 
+     * @return array
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(PermissionMiddleware::using(PermissionEnum::PERMISSION_LIST), only: ['index']),
+            new Middleware(PermissionMiddleware::using(PermissionEnum::PERMISSION_UPDATE), only: ['edit', 'update']),
+        ];
     }
 
     /**

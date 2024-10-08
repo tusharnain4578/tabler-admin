@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\Admin\AdminRequest;
-use App\Models\Role;
-use App\Models\Admin;
 use App\Services\ResponseService;
 use App\Services\AdminService;
 use Illuminate\Http\Request;
+use App\Enums\Permission;
+use App\Models\Admin;
+use App\Models\Role;
 
-class AdminController extends \App\Foundation\Controller
+class AdminController extends \App\Foundation\Controller implements HasMiddleware
 {
     /**
      * Constructor for AdminController
@@ -23,6 +27,20 @@ class AdminController extends \App\Foundation\Controller
     ) {
     }
 
+    /**
+     * Permission middleware for resource controller methods
+     * 
+     * @return array
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(PermissionMiddleware::using(Permission::ADMIN_LIST), only: ['index']),
+            new Middleware(PermissionMiddleware::using(Permission::ADMIN_CREATE), only: ['create', 'store']),
+            new Middleware(PermissionMiddleware::using(Permission::ADMIN_UPDATE), only: ['edit', 'update']),
+            new Middleware(PermissionMiddleware::using(Permission::ADMIN_DELETE), only: ['destroy']),
+        ];
+    }
 
     /**
      * Display a listing of the resource.
@@ -54,13 +72,6 @@ class AdminController extends \App\Foundation\Controller
         return $this->responseService->json(success: true, redirectTo: route('admin.admins.index'));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Admin $admin)
-    {
-        return view('admin.admins.show', compact('admin'));
-    }
 
     /**
      * Show the form for editing the specified resource.

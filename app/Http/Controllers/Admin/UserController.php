@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Requests\Admin\UserRequest;
-use App\Models\User;
 use App\Services\ResponseService;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use App\Enums\Permission as PermissionEnum;
+use App\Models\User;
 
-class UserController extends \App\Foundation\Controller
+class UserController extends \App\Foundation\Controller implements HasMiddleware
 {
     /**
      * Constructor for UserController
@@ -20,6 +24,20 @@ class UserController extends \App\Foundation\Controller
         protected UserService $service,
         protected ResponseService $responseService
     ) {
+    }
+
+    /**
+     * Permission middleware for resource controller methods
+     * 
+     * @return array
+     */
+    public static function middleware(): array
+    {
+        return [
+            new Middleware(PermissionMiddleware::using(PermissionEnum::USER_LIST), only: ['index']),
+            new Middleware(PermissionMiddleware::using(PermissionEnum::USER_CREATE), only: ['create', 'store']),
+            new Middleware(PermissionMiddleware::using(PermissionEnum::USER_DELETE), only: ['destroy']),
+        ];
     }
 
     /**
@@ -50,30 +68,6 @@ class UserController extends \App\Foundation\Controller
         $this->service->create($request);
         $this->flashToast('success', 'User Created!');
         return $this->responseService->json(success: true, redirectTo: route('admin.users.index'));
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(User $user)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, User $user)
-    {
-        //
     }
 
     /**

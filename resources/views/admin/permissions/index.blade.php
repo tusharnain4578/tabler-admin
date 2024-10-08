@@ -28,11 +28,16 @@
         const Action = {
             showUrl: @js(route('admin.permissions.show', ':id')),
             editUrl: @js(route('admin.permissions.edit', ':id')),
+            canEdit: @js(
+                auth('admin')->user()->can(Permission::PERMISSION_UPDATE)
+            ),
             show: function(id) {
                 const url = this.showUrl.replace(':id', id);
                 return `<a href="${url}" class="cursor-pointer mx-1"><i class="ti ti-eye text-warning h1"></i></a>`;
             },
             edit: function(id) {
+                if (!Action.canEdit)
+                    return '';
                 const url = this.editUrl.replace(':id', id);
                 return `<a href="${url}" class="cursor-pointer mx-1"><i class="ti ti-edit text-primary h1"></i></a>`;
             },

@@ -1,7 +1,11 @@
 @extends('admin.layouts.app', [
     'pageTitle' => Breadcrumbs::current()->title,
     'breadcrumbs' => Breadcrumbs::render('admin.users.index'),
-    'buttons' => [['label' => 'Add new user', 'icon' => 'ti ti-plus', 'url' => route('admin.users.create')]],
+    'buttons' => [
+        auth('admin')->user()->can(Permission::USER_CREATE)
+            ? ['label' => 'Add new user', 'icon' => 'ti ti-plus', 'url' => route('admin.users.create')]
+            : null,
+    ],
 ])
 
 @include('admin.layouts.components.datatable')
@@ -32,8 +36,13 @@
 
         const Action = {
             deleteUrl: @js(route('admin.users.destroy', ':id')),
+            canDelete: @js(
+                auth('admin')->user()->can(Permission::USER_DELETE)
+            ),
             delete: function(username) {
-                return `<a href="javascript:;" data-delete-id="${username}" class="cursor-pointer mx-1"><i class="ti ti-trash text-danger h1"></i></a>`;
+                return Action.canDelete ?
+                    `<a href="javascript:;" data-delete-id="${username}" class="cursor-pointer mx-1"><i class="ti ti-trash text-danger h1"></i></a>` :
+                    '';
             },
         };
 

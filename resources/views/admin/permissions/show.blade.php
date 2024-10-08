@@ -1,7 +1,11 @@
 @extends('admin.layouts.app', [
     'pageTitle' => Breadcrumbs::current()->title,
     'breadcrumbs' => Breadcrumbs::render('admin.permissions.show'),
-    'buttons' => [['label' => 'Edit Permission', 'icon' => 'ti ti-edit', 'url' => route('admin.permissions.edit', $permission)]],
+    'buttons' => [
+        auth('admin')->user()->can(Permission::PERMISSION_UPDATE)
+            ? ['label' => 'Edit Permission', 'icon' => 'ti ti-edit', 'url' => route('admin.permissions.edit', $permission)]
+            : null,
+    ],
 ])
 
 

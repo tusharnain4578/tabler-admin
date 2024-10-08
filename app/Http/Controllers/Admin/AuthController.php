@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\Permission;
 use App\Http\Requests\Admin\Auth\LoginRequest;
 use App\Models\User;
 use App\Services\ResponseService;
@@ -27,6 +28,12 @@ class AuthController extends \App\Foundation\Controller
         $remember = $request->has('remember');
 
         if (Auth::guard('admin')->attempt($credentials, $remember)) {
+            $admin = Auth::guard('admin')->user();
+            if ($admin->cannot(Permission::ADMIN_PANEL)) {
+                Auth::guard('admin')->logout();
+                return $this->responseService->errors(errors: ['username' => ['Account is not authorized to visit the dashboard.']]);
+            }
+
             $request->session()->regenerate();
 
             return $this->responseService->json(true, 'Login Successful!', [

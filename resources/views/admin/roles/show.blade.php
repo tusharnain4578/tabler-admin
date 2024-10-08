@@ -1,7 +1,11 @@
 @extends('admin.layouts.app', [
     'pageTitle' => Breadcrumbs::current()->title,
     'breadcrumbs' => Breadcrumbs::render('admin.roles.show'),
-    'buttons' => [['label' => 'Edit Role', 'icon' => 'ti ti-edit', 'url' => route('admin.roles.edit', $role)]],
+    'buttons' => [
+        auth('admin')->user()->can(Permission::ROLE_UPDATE)
+            ? ['label' => 'Edit Role', 'icon' => 'ti ti-edit', 'url' => route('admin.roles.edit', $role)]
+            : null,
+    ],
 ])
 
 @section('content')

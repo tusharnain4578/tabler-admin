@@ -94,24 +94,26 @@
                             <div class="col-auto ms-auto d-print-none">
                                 <div class="btn-list">
                                     @foreach ($buttons as $button)
-                                        <div>
-                                            <a href="{{ $button['url'] ?? 'javascript:;' }}"
-                                                class="d-none d-sm-inline-block">
-                                                <button class="btn btn-primary ">
-                                                    @isset($button['icon'])
-                                                        <i class="{{ $button['icon'] }} me-2"></i>
-                                                    @endisset
-                                                    {{ $button['label'] }}
-                                                </button>
-                                            </a>
-                                            @if (isset($button['icon']))
+                                        @if (!is_null($button))
+                                            <div>
                                                 <a href="{{ $button['url'] ?? 'javascript:;' }}"
-                                                    class="btn btn-primary d-sm-none btn-icon"
-                                                    aria-label="{{ $button['label'] }}">
-                                                    <i class="{{ $button['icon'] }}"></i>
+                                                    class="d-none d-sm-inline-block">
+                                                    <button class="btn btn-primary ">
+                                                        @isset($button['icon'])
+                                                            <i class="{{ $button['icon'] }} me-2"></i>
+                                                        @endisset
+                                                        {{ $button['label'] }}
+                                                    </button>
                                                 </a>
-                                            @endif
-                                        </div>
+                                                @if (isset($button['icon']))
+                                                    <a href="{{ $button['url'] ?? 'javascript:;' }}"
+                                                        class="btn btn-primary d-sm-none btn-icon"
+                                                        aria-label="{{ $button['label'] }}">
+                                                        <i class="{{ $button['icon'] }}"></i>
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        @endif
                                     @endforeach
                                 </div>
                             </div>

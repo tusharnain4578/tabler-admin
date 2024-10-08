@@ -1,7 +1,11 @@
 @extends('admin.layouts.app', [
     'pageTitle' => Breadcrumbs::current()->title,
     'breadcrumbs' => Breadcrumbs::render('admin.roles.index'),
-    'buttons' => [['label' => 'Add new role', 'icon' => 'ti ti-plus', 'url' => route('admin.roles.create')]],
+    'buttons' => [
+        auth('admin')->user()->can(Permission::ROLE_CREATE)
+            ? ['label' => 'Add new role', 'icon' => 'ti ti-plus', 'url' => route('admin.roles.create')]
+            : null,
+    ],
 ])
 
 @include('admin.layouts.components.datatable')
@@ -33,16 +37,22 @@
                 'showUrl' => route('admin.roles.show', ':id'),
                 'editUrl' => route('admin.roles.edit', ':id'),
                 'deleteUrl' => route('admin.roles.destroy', ':id'),
+                'canEdit' => auth('admin')->user()->can(Permission::ROLE_UPDATE),
+                'canDelete' => auth('admin')->user()->can(Permission::ROLE_DELETE),
             ]),
             show: function(id) {
                 const url = this.showUrl.replace(':id', id);
                 return `<a href="${url}" class="cursor-pointer mx-1"><i class="ti ti-eye text-warning h1"></i></a>`;
             },
             edit: function(id) {
+                if (!Action.canEdit)
+                    return '';
                 const url = this.editUrl.replace(':id', id);
                 return `<a href="${url}" class="cursor-pointer mx-1"><i class="ti ti-edit text-primary h1"></i></a>`;
             },
             delete: function(id) {
+                if (!Action.canDelete)
+                    return '';
                 return `<a href="javascript:;" data-delete-id="${id}" class="cursor-pointer mx-1"><i class="ti ti-trash text-danger h1"></i></a>`;
             },
         };

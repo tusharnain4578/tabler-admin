@@ -1,18 +1,33 @@
 @php
+    $user = auth('admin')->user();
     $menu = new \App\Libraries\AdminMenu();
 
     // Dashboard
     $menu->add('dashboard', ['title' => 'Dashboard', 'icon' => 'ti ti-home', 'url' => route('admin.home')]);
 
     // Admin Management
-    $menu->add('admin_mgmt', ['title' => 'Admin Management', 'icon' => 'ti ti-radioactive', 'url' => null]);
-    $menu->addSubmenu(['title' => 'Roles', 'url' => route('admin.roles.index')]);
-    $menu->addSubmenu(['title' => 'Permissions', 'url' => route('admin.permissions.index')]);
-    $menu->addSubmenu(['title' => 'Admins', 'url' => route('admin.admins.index')]);
+    if ($user->canAny([Permission::ROLE_LIST, Permission::PERMISSION_LIST, Permission::ADMIN_LIST])) {
+        $menu->add('admin_mgmt', ['title' => 'Admin Management', 'icon' => 'ti ti-radioactive', 'url' => null]);
+
+        if ($user->can(Permission::ROLE_LIST)) {
+            $menu->addSubmenu(['title' => 'Roles', 'url' => route('admin.roles.index')]);
+        }
+        if ($user->can(Permission::PERMISSION_LIST)) {
+            $menu->addSubmenu(['title' => 'Permissions', 'url' => route('admin.permissions.index')]);
+        }
+        if ($user->can(Permission::ADMIN_LIST)) {
+            $menu->addSubmenu(['title' => 'Admins', 'url' => route('admin.admins.index')]);
+        }
+    }
 
     // User Management
-    $menu->add('user_mgmt', ['title' => 'User Management', 'icon' => 'ti ti-users', 'url' => null]);
-    $menu->addSubmenu(['title' => 'Users', 'url' => route('admin.users.index')]);
+    if ($user->canAny([Permission::USER_LIST])) {
+        $menu->add('user_mgmt', ['title' => 'User Management', 'icon' => 'ti ti-users', 'url' => null]);
+
+        if ($user->can(Permission::USER_LIST)) {
+            $menu->addSubmenu(['title' => 'Users', 'url' => route('admin.users.index')]);
+        }
+    }
 
 @endphp
 
