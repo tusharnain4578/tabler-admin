@@ -1,0 +1,56 @@
+/* intl telephone  */
+.iti {
+    width: 100% !important;
+}
+
+.iti__selected-flag {
+    align-items: normal !important;
+}
+
+.iti__flag-container {
+    max-height: 39.26px;
+}
+
+.iti__flag {
+    margin-top: 14px !important;
+}
+
+.iti__arrow {
+    margin-top: 18px !important;
+}
+
+/* select2 */
+.select2-container--bootstrap-5 .select2-selection {
+    background-color: inherit !important;
+}
+
+body[data-bs-theme="dark"] .select2-selection__choice__display {
+    color: white !important;
+}
+
+/* Change the background color on hover */
+.select2-container--bootstrap-5
+    .select2-dropdown
+    .select2-results__options
+    .select2-results__option.select2-results__option--selected,
+.select2-container--bootstrap-5
+    .select2-dropdown
+    .select2-results__options
+    .select2-results__option[aria-selected="true"]:not(
+        .select2-results__option--highlighted
+    ) {
+    background-color: #182433 !important;
+    border: 1px white solid !important;
+}
+
+.select2-container--bootstrap-5 .select2-selection {
+    background-color: var(--tblr-bg-forms) !important;
+}
+
+body[data-bs-theme="dark"] .select2-container--bootstrap-5 .select2-selection {
+    border: 1px solid #474747 !important;
+}
+
+.dt-empty {
+    text-align: center !important;
+}
